@@ -51,7 +51,9 @@ Compatible with the following list of operating systems:
 
 | Variable name | Description |
 |---------------|-------------|
-| ... | ... |
+| role_firewalld_required_packages | List of required packages. |
+| role_firewalld_default_zone | The default firewalld zone to set to. |
+| role_firewalld_rule_list | Combined list of other lists that start with the name `role_localusers_sudoers_list_`. Examples at: [molecule/default/vars/vars_firewalld_rules.yml](molecule/default/vars/vars_firewalld_rules.yml) |
 
 ## Example Playbook
 
