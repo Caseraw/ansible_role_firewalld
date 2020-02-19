@@ -18,6 +18,11 @@ cache: pip
 install:
   - pip install --upgrade pip setuptools
   - pip install molecule docker
+before_script:
+  - mkdir /lib/modules/$(uname -r)
+  - 'touch /lib/modules/$(uname -r)/modules.{builtin,order}'
+  - 'for i in /sys/module/*; do echo kernel/${i##**/}.ko; done >> /lib/modules/$(uname -r)/modules.builtin'
+  - 'depmod -a'
 script:
   - python --version
   - ansible --version
