@@ -33,9 +33,8 @@
     enabled: True
     masked: False
     daemon_reload: True
-  when:
-    - ansible_facts.services['firewalld.service'].state != "running"
-    - ansible_facts.services['firewalld.service'].state != "enabled"
+  when: (ansible_facts.services['firewalld.service'].state is not match("running")) or
+        (ansible_facts.services['firewalld.service'].status is not match("enabled"))
 
 - name: Populate firewalld rule list
   set_fact:
