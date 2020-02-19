@@ -2,6 +2,8 @@
 
 Manage the installation and configuration of the host based firewall with **firewalld**.
 
+[![Build Status](https://travis-ci.org/Caseraw/ansible_role_firewalld.svg?branch=master)](https://travis-ci.org/Caseraw/ansible_role_firewalld) [<img src="https://img.shields.io/ansible/role/46685">](https://galaxy.ansible.com/caseraw/ansible_role_firewalld) [<img src="https://img.shields.io/ansible/role/d/46685">](https://galaxy.ansible.com/caseraw/ansible_role_firewalld) [<img src="https://img.shields.io/ansible/quality/46685">](https://galaxy.ansible.com/caseraw/ansible_role_firewalld)
+
 - [Ansible role firewalld](#ansible-role-firewalld)
   - [License](#license)
   - [Author Information](#author-information)
