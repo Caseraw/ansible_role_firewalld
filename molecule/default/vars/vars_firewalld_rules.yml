@@ -1,0 +1,50 @@
+---
+role_firewalld_default_zone: public
+role_firewalld_rule_list_default:
+  - name: Enable SSH in public zone
+    state: enabled
+    zone: public
+    service: ssh
+    permanent: True
+    immediate: True
+    restart_handler: start_restart_firewalld
+  - name: Disable DHCP v6 Client in public zone
+    state: disabled
+    zone: public
+    service: dhcpv6-client
+    permanent: True
+    immediate: True
+  - name: Disable DNS in public zone
+    state: disabled
+    zone: public
+    service: dns
+  - name: Add a new zone custom_zone
+    state: present
+    zone: custom_zone
+    permanent: True
+  - name: Enable port 8080 in custom_zone
+    state: enabled
+    zone: custom_zone
+    port: 8080/tcp
+    permanent: True
+    immediate: True
+  - name: Allow source network 192.0.2.0/24 in custom_zone
+    state: enabled
+    zone: custom_zone
+    source: 192.0.2.0/24
+    permanent: True
+    immediate: True
+  - name: Redirect port 443 to 8443 in custom_zone
+    state: enabled
+    zone: custom_zone
+    rich_rule: rule family=ipv4 forward-port port=443 protocol=tcp to-port=8443
+    permanent: True
+    immediate: True
+  - name: Enable DNS in custom_zone
+    state: enabled
+    zone: custom_zone
+    service: dns
+    permanent: True
+    immediate: True
+
+...

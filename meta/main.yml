@@ -1,0 +1,28 @@
+---
+galaxy_info:
+  author: Kasra Amirsarvari
+  description: Manage the installation and configuration of the host based firewall with firewalld
+  company: N/A
+  license: license (BSD, MIT)
+  min_ansible_version: 2.6
+  platforms:
+    - name: Fedora
+      versions:
+        - 28
+        - 29
+        - 30
+        - 31
+    - name: EL
+      versions:
+        - 7
+        - 8
+  galaxy_tags:
+    - firewall
+    - firewalld
+    - network
+    - security
+    - service
+
+dependencies: []
+
+...

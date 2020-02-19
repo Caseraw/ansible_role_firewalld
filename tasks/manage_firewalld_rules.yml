@@ -1,0 +1,54 @@
+---
+### Why the loop over a file and not just a single task?
+## It is a weird solution at first, allow me to explain.
+##
+## Due to the fact that a multitude of options can be passed to the module,
+## some internals of firewalld require a different approach which are not
+## supported in the firewalld module.
+##
+## This case started with the creation of a new zone. A new zone requires a
+## `firewall-cmd --reload`, this should be picked up by the module parameter
+## 'immediate', doing so causes an error: "Zone operations must be permanent.
+## Make sure you didn't set the 'permanent' flag to 'false' or the 'immediate'
+## flag to 'true'.". Hence we need a reload during a loop, but you can only
+## perform 1 task at a time. So a block would be good, but you can't loop over
+## a block. So you need to include a task file containing the required set of
+## activities which can be looped over for each firewalld rule in this case.
+##
+## It may look confusing, but it is actually simplifying it's usage. If a newer
+## and more efficient method becomes available, the current behavior will be
+## changed accordingly.
+
+- name: Set firewalld rules
+  block:
+    - name: Ensure rule | {{ item.name }}
+      firewalld:
+        state: '{{ item.state | default(omit) }}'
+        zone: '{{ item.zone | default(omit) }}'
+        interface: '{{ item.interface | default(omit) }}'
+        service: '{{ item.service | default(omit) }}'
+        port: '{{ item.port | default(omit) }}'
+        source: '{{ item.source | default(omit) }}'
+        rich_rule: '{{ item.rich_rule | default(omit) }}'
+        icmp_block: '{{ item.icmp_block | default(omit) }}'
+        icmp_block_inversion: '{{ item.icmp_block_inversion | default(omit) }}'
+        masquerade: '{{ item.masquerade | default(omit) }}'
+        permanent: '{{ item.permanent | default(omit) }}'
+        immediate: '{{ item.immediate | default(omit) }}'
+        timeout: '{{ item.timeout | default(omit) }}'
+        offline: '{{ item.offline | default(omit) }}'
+      notify: '{{ item.restart_handler | default(omit) }}'
+      register: role_firewalld_register_set_firewalld_rule
+  rescue:
+    - name: Failed and will not proceed!
+      fail:
+        msg: Can't do what is asked for. Please investigate.
+  always:
+    - name: Reload firewalld if required
+      command: firewall-cmd --reload
+      when:
+        - (item.state == 'present') or (item.state == 'absent')
+        - item.zone is defined
+        - role_firewalld_register_set_firewalld_rule.changed
+
+...

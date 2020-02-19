@@ -1,0 +1,11 @@
+---
+- name: Ensure firewalld is started/restarted and enabled
+  systemd:
+    name: firewalld
+    state: restarted
+    enabled: True
+    masked: False
+    daemon_reload: True
+  listen: start_restart_firewalld
+
+...

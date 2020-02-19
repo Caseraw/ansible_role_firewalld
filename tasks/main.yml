@@ -1,0 +1,68 @@
+---
+- name: Unarm iptables | part 1 | Gather package facts
+  package_facts:
+    manager: auto
+
+- name: Unarm iptables | part 2 | Ensure ntpd is stopped and disabled
+  systemd:
+    name: iptables
+    state: stopped
+    enabled: False
+    daemon_reload: True
+  when: "'iptables-services' in ansible_facts.packages"
+
+- name: Unarm iptables | part 3 | Ensure ntpd is masked
+  systemd:
+    name: iptables
+    masked: True
+  when: "'iptables-services' in ansible_facts.packages"
+
+- name: Arm firewalld | part 1 | Ensure firewalld is installed
+  package:
+    name: '{{ role_firewalld_required_packages }}'
+    state: present
+  notify: start_restart_firewalld
+
+- name: Arm firewalld | part 2 | Gather service facts
+  service_facts:
+
+- name: Arm firewalld | part 3 | Ensure firewalld service is enabled and running
+  systemd:
+    name: firewalld
+    state: restarted
+    enabled: True
+    masked: False
+    daemon_reload: True
+  when:
+    - ansible_facts.services["firewalld.service"].state != "running"
+
+- name: Populate firewalld rule list
+  set_fact:
+    role_firewalld_rule_list: '{{ role_firewalld_rule_list | default([]) + vars[item] }}'
+  loop: "{{ vars.keys() | select('match', '^role_firewalld_rule_list_.*$') | list }}"
+
+### Why the loop over a file and not just a single task?
+## Please read the explanation in the included file.
+- name: Include task file to set firewalld rules
+  include_tasks: manage_firewalld_rules.yml
+  loop: '{{ role_firewalld_rule_list | default([]) }}'
+
+### Set default zone not supported in the firewalld module.
+## Due to this limit, the block below is used as a workaround.
+- name: Ensure default zone is set
+  block:
+    - name: Check default zone
+      command: firewall-cmd --get-default-zone
+      register: role_firewalld_register_get_default_zone
+      changed_when: False
+
+    - name: Ensure default zone is set
+      command: firewall-cmd --set-default-zone={{ role_firewalld_default_zone }}
+      when:
+        - role_firewalld_register_get_default_zone.stdout != role_firewalld_default_zone
+  rescue:
+    - name: Fail and do no proceed!
+      fail:
+        msg: Can't set the default zone for firewalld. Please investigate.
+
+...

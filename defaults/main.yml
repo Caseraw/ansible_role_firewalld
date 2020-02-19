@@ -1,0 +1,41 @@
+---
+### Default zone.
+## The default is always set to public. Change this if needed.
+## Whn defining a non standard zone, make sure to create it in a list
+## variable starting with the name `role_firewalld_rule_list_`.
+## The default will then be set after a new zone is created.
+
+role_firewalld_default_zone: public
+
+### Managing user groups.
+## Minimum required values: 'name' and 'state'.
+##
+## For better maintainability, the group list is built during runtime by
+## combining all lists together. This will provide the freedom of declaring
+## custom group lists for granular control. The lists require a naming
+## convention by using a pattern. The pattern is rendered as a single list
+## which can be used for iteration with variable: 'role_firewalld_rule_list'
+## The list name pattern needs to start with: 'role_firewalld_rule_list_'
+
+role_firewalld_rule_list_default: []
+
+## Example of a list for default inheritance:
+# role_firewalld_rule_list_default:
+#   - name: Enable SSH in public zone
+#     state: enabled
+#     zone: public
+#     service: ssh
+#     permanent: True
+#     immediate: True
+#     restart_handler: start_restart_firewalld
+#   - name: Disable DHCP v6 Client in public zone
+#     state: disabled
+#     zone: public
+#     service: dhcpv6-client
+#     permanent: True
+#     immediate: True
+
+## More examples at: 'molecule/default/vars/vars_firewalld_rules.yml'
+## This file is used to verify tests with and contains some possible variants.
+
+...

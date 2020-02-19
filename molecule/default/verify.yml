@@ -1,0 +1,92 @@
+---
+- name: Verify
+  hosts: all
+  become: True
+  gather_facts: False
+  tasks:
+    - name: Gather package facts
+      package_facts:
+        manager: auto
+
+    - name: Gather service facts
+      service_facts:
+
+    - name: Ensure firewalld is installed
+      fail:
+        msg: Package 'firewalld' is not installed
+      when: "'firewalld' not in ansible_facts.packages"
+
+    - name: Ensure firewalld service is enabled and running
+      fail:
+        msg: Service 'firewalld' is not running and/or enabled
+      when:
+        - ansible_facts.services["firewalld.service"].state != "running"
+        - ansible_facts.services["firewalld.service"].status != "enabled"
+
+    - name: Run command | check firewalld configuration
+      block:
+        - name: Run command | check firewalld configuration
+          command: firewall-cmd --check-config
+          register: role_firewalld_check_config_command
+          changed_when: False
+      rescue:
+        - name: Failed and will not proceed!
+          fail:
+            msg: "{{ role_firewalld_check_config_command.stdout.split('\n') }}"
+
+    - name: Run command | list all services | part 1
+      command: firewall-cmd --get-services
+      register: role_firewalld_get_services_command
+      changed_when: False
+
+    - name: Show output | list all services | part 2
+      debug:
+        msg: "{{ role_firewalld_get_services_command.stdout.split('\n') }}"
+
+    - name: Run command | list all zones | part 1
+      command: firewall-cmd --list-all-zones
+      register: role_firewalld_list_all_zones_command
+      changed_when: False
+
+    - name: Show output | list all zones | part 2
+      debug:
+        msg: "{{ role_firewalld_list_all_zones_command.stdout.split('\n') }}"
+
+    - name: Run command | get all active zones | part 1
+      command: firewall-cmd --get-active-zones
+      register: role_firewalld_get_active_zones_command
+      changed_when: False
+
+    - name: Show output | get all active zones | part 2
+      debug:
+        msg: "{{ role_firewalld_get_active_zones_command.stdout.split('\n') }}"
+
+    - name: Run command | get default zone | part 1
+      command: firewall-cmd --get-default-zone
+      register: role_firewalld_get_default_zone_command
+      changed_when: False
+
+    - name: Show output | get default zone | part 2
+      debug:
+        msg: "{{ role_firewalld_get_default_zone_command.stdout.split('\n') }}"
+
+    - name: Run command | List all for the default zone | part 1
+      command: firewall-cmd --list-all
+      register: role_firewalld_list_all_default_zone_command
+      changed_when: False
+
+    - name: Show output | List all for the default zone | part 2
+      debug:
+        msg: "{{ role_firewalld_list_all_default_zone_command.stdout.split('\n') }}"
+
+    - name: Run command | get lockdown state | part 1
+      command: firewall-cmd --query-lockdown
+      register: role_firewalld_get_lockdown_state_command
+      changed_when: False
+      failed_when: False
+
+    - name: Show output | get lockdown state| part 2
+      debug:
+        msg: "{{ role_firewalld_get_lockdown_state_command.stdout.split('\n') }}"
+
+...
