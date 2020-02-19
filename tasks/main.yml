@@ -38,6 +38,10 @@
     daemon_reload: True
   when: ansible_facts.services["firewalld.service"].state is not match("running")
 
+- name: Pause
+  pause:
+    seconds: 30
+
 - name: debug command
   command: systemctl status firewalld
   args:
