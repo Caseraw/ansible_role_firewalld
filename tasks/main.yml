@@ -3,7 +3,7 @@
   package_facts:
     manager: auto
 
-- name: Unarm iptables | part 2 | Ensure ntpd is stopped and disabled
+- name: Unarm iptables | part 2 | Ensure iptables is stopped and disabled
   systemd:
     name: iptables
     state: stopped
@@ -11,7 +11,7 @@
     daemon_reload: True
   when: "'iptables-services' in ansible_facts.packages"
 
-- name: Unarm iptables | part 3 | Ensure ntpd is masked
+- name: Unarm iptables | part 3 | Ensure iptables is masked
   systemd:
     name: iptables
     masked: True
@@ -37,6 +37,10 @@
     masked: False
     daemon_reload: True
   when: ansible_facts.services["firewalld.service"].state is not match("running")
+
+- name: Pause
+  pause:
+    seconds: 30
 
 - name: debug stuff
   service_facts:
