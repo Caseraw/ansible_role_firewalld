@@ -26,6 +26,9 @@
 - name: Arm firewalld | part 2 | Gather service facts
   service_facts:
 
+- debug:
+    var: ansible_facts.services["firewalld.service"]
+
 - name: Arm firewalld | part 3 | Ensure firewalld service is enabled and running
   systemd:
     name: firewalld
@@ -33,8 +36,13 @@
     enabled: True
     masked: False
     daemon_reload: True
-  when: (ansible_facts.services['firewalld.service'].state is not match("running")) or
-        (ansible_facts.services['firewalld.service'].status is not match("enabled"))
+  when: ansible_facts.services["firewalld.service"].state is not match("running")
+
+- name: debug stuff
+  service_facts:
+
+- debug:
+    var: ansible_facts.services["firewalld.service"]
 
 - name: Populate firewalld rule list
   set_fact:
