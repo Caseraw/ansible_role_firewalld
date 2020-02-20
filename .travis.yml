@@ -19,10 +19,15 @@ install:
   - pip install --upgrade pip setuptools
   - pip install molecule docker
 before_script:
-  - mkdir /lib/modules/$(uname -r)
-  - 'touch /lib/modules/$(uname -r)/modules.{builtin,order}'
-  - 'for i in /sys/module/*; do echo kernel/${i##**/}.ko; done >> /lib/modules/$(uname -r)/modules.builtin'
-  - 'depmod -a'
+  - cp /travis_scripts/rebuild-builtin-modules /usr/local/sbin/rebuild-builtin-modules
+  - cp /travis_scripts/rebuild-builtin-modules.service /etc/systemd/system/rebuild-builtin-modules.service
+  - chmod 0644 /etc/systemd/system/rebuild-builtin-modules.service
+  - chmod 0755 /usr/local/sbin/rebuild-builtin-modules
+  - chown root:root /etc/systemd/system/rebuild-builtin-modules.service 
+  - chown root:root  /usr/local/sbin/rebuild-builtin-modules
+  - systemctl enable --now rebuild-builtin-modules.service
+  - /usr/local/sbin/rebuild-builtin-modules
+  # - systemctl restart firewalld
 script:
   - python --version
   - ansible --version
