@@ -2,6 +2,13 @@
 
 Manage the installation and configuration of the host based firewall with **firewalld**.
 
+_Please keep in mind, the current Travis CI build is failing due to an internal Firewalld issue. Please refer to the following links for more information on this matter. The contents of the role work as expected and intended:_
+
+- https://github.com/nkinder/ansible-keycloak/issues/22
+- https://github.com/firewalld/firewalld/issues/519
+
+> I prefer to be patient until the issue is resolved upstream as the Travis CI build is just an indication of a successful execution of the role emulated in a container. I will keep monitoring for a permanent fix and apply updates when required.
+
 [![Build Status](https://travis-ci.org/Caseraw/ansible_role_firewalld.svg?branch=master)](https://travis-ci.org/Caseraw/ansible_role_firewalld) [<img src="https://img.shields.io/ansible/role/46685">](https://galaxy.ansible.com/caseraw/ansible_role_firewalld) [<img src="https://img.shields.io/ansible/role/d/46685">](https://galaxy.ansible.com/caseraw/ansible_role_firewalld) [<img src="https://img.shields.io/ansible/quality/46685">](https://galaxy.ansible.com/caseraw/ansible_role_firewalld)
 
 - [Ansible role firewalld](#ansible-role-firewalld)
