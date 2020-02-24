@@ -7,7 +7,7 @@
 
 role_firewalld_default_zone: public
 
-### Managing user groups.
+### Managing firewall rules.
 ## Minimum required values: 'name' and 'state'.
 ##
 ## For better maintainability, the group list is built during runtime by
