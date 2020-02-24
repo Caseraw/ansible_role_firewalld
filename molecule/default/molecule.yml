@@ -14,10 +14,9 @@ provisioner:
     converge: playbook.yml
 scenario:
   name: default
-lint:
-  name: yamllint
-  options:
-    config-file: molecule/default/yamllint.yml
+lint: |
+  yamllint . -c molecule/default/yamllint.yml -f auto -s
+  ansible-lint
 driver:
   name: docker
 platforms:
@@ -30,7 +29,5 @@ platforms:
     pre_build_image: True
 verifier:
   name: ansible
-  lint:
-    name: ansible-lint
 
 ...
