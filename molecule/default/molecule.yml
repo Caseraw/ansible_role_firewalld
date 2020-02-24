@@ -8,8 +8,6 @@ provisioner:
       remote_tmp: /tmp
       stdout_callback: yaml
       bin_ansible_callbacks: True
-  lint:
-    name: ansible-lint
   playbooks:
     converge: playbook.yml
 scenario:
