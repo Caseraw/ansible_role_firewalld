@@ -1,6 +1,0 @@
----
-### Software packages required for installing firewalld.
-role_firewalld_required_packages:
-  - firewalld
-
-...
