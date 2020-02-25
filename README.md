@@ -62,7 +62,7 @@ Compatible with the following list of operating systems:
 |---------------|-------------|
 | role_firewalld_required_packages | List of required packages. |
 | role_firewalld_default_zone | The default firewalld zone to set to. |
-| role_firewalld_rule_list | Combined list of other lists that start with the name `role_localusers_sudoers_list_`. Examples at: [molecule/default/vars/vars_firewalld_rules.yml](molecule/default/vars/vars_firewalld_rules.yml) |
+| role_firewalld_rule_list | Combined list of other lists that start with the name `role_firewalld_rule_list_`. Examples at: [molecule/default/vars/vars_firewalld_rules.yml](molecule/default/vars/vars_firewalld_rules.yml) |
 
 ## Example Playbook
 
@@ -80,7 +80,13 @@ Compatible with the following list of operating systems:
 ## Useful shell commands
 
 ```shell
-...
+firewall-cmd --check-config
+firewall-cmd --get-services
+firewall-cmd --list-all-zones
+firewall-cmd --get-active-zones
+firewall-cmd --get-default-zone
+firewall-cmd --list-all
+firewall-cmd --query-lockdown
 ```
 
 ## Additional documentation resources
